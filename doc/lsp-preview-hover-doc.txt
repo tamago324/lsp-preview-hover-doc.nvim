@@ -1,0 +1,155 @@
+*lsp-preview-hover-doc.nvim*
+
+
+==============================================================================
+Introduction                                *lsp-preview-hover-doc-introduction*
+
+display textDocument/hover in floating window.
+
+
+==============================================================================
+Requirements                                *lsp-preview-hover-doc-requirements*
+
+- Neovim >= v0.6.0
+
+
+==============================================================================
+Interface                                      *lsp-preview-hover-doc-interface*
+
+
+------------------------------------------------------------------------------
+Settings                                        *lsp-preview-hover-doc-settings*
+
+Setup with |lsp_preview_hover_doc.setup()|.
+
+default value: >
+
+    {
+      on_init_in_preview_window = function() end,
+      win_opts = {
+        height = 20,
+        zindex = 30
+      } 
+    }
+<
+
+        *lsp-preview-hover-doc-settings-on_init_in_preview_window*
+on_init_in_preview_window
+    Function to be executed when the preview window is initialized.
+
+            *lsp-preview-hover-doc-settings-win_opts*
+win_opts
+    Specifies the function that returns the table to be passed as the
+    third argument of |nvim_open_win()|.
+
+
+Example: >
+
+    local map = function(bufnr, lhs, rhs)
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        lhs,
+        rhs,
+        { silent = true, noremap = true }
+    )
+    end
+
+    require("lsp_preview_hover_doc").setup({
+      on_init_in_preview_window = function(bufnr)
+        map(bufnr, "L", "<Cmd>wincmd p<CR>")
+        map(bufnr, "H", "<Cmd>wincmd p<CR>")
+        map(bufnr, "<Left>", '<Cmd>lua require("lsp_preview_hover_doc").show_prev()<CR>')
+        map(bufnr, "<Right>", '<Cmd>lua require("lsp_preview_hover_doc").show_next()<CR>')
+      end,
+      win_opts = {
+        height = 20,
+        zindex = 30,
+      },
+    })
+<
+
+------------------------------------------------------------------------------
+Lua module: lsp_preview_hover_doc                        *lsp_preview_hover_doc*
+
+                                                 *lsp_preview_hover_doc.setup()*
+lsp_preview_hover_doc.setup([{opts}])
+    Setup lsp-preview-hover-doc.
+
+        Parameters: ~
+            {opts} (table) see |lsp-preview-hover-doc-settings|.
+
+                           *lsp_preview_hover_doc.request_hover_open_or_focus()*
+lsp_preview_hover_doc.request_hover_open_or_focus()
+    Request textDocument/hover to open the preview.
+    If the preview window is open and the request result is the same string,
+    focus.
+
+                                         *lsp_preview_hover_doc.open_or_focus()*
+lsp_preview_hover_doc.open_or_focus()
+    Opens a preview window. (The request will not be sent.)
+    If the preview window is open, focus on it.
+
+                                                 *lsp_preview_hover_doc.close()*
+lsp_preview_hover_doc.close()
+    Close the preview window.
+
+                                             *lsp_preview_hover_doc.show_prev()*
+lsp_preview_hover_doc.show_prev()
+    Display the previous text in the preview window.
+
+                                             *lsp_preview_hover_doc.show_next()*
+lsp_preview_hover_doc.show_next()
+    Display the next text in the preview window.
+
+
+------------------------------------------------------------------------------
+Highlights                                     *lsp-preview-hover-doc-functions*
+
+LspPreviewHoverDocNormal                    *LspPreviewHoverDocNormal*
+
+    Default: `highlight def link LspPreviewHoverDocNormal Normal`
+
+LspPreviewHoverDocBorder                    *LspPreviewHoverDocBorder*
+
+    Default: `highlight def link LspPreviewHoverDocBorder Normal`
+
+
+------------------------------------------------------------------------------
+Example                                     *lsp-preview-hover-doc-example*
+
+>
+    local map = function(bufnr, lhs, rhs)
+      vim.api.nvim_buf_set_keymap(
+        bufnr,
+        "n",
+        lhs,
+        rhs,
+        { silent = true, noremap = true }
+      )
+    end
+
+    require'nvim-lsp-installer'.on_server_ready(function(server)
+      server:setup({ on_attach = function()
+        map("n", "L",  [[<Cmd>lua require'lsp_preview_hover_doc'.request_hover_open_or_focus()<CR>]])
+        map("n", "H",  [[<Cmd>lua require'lsp_preview_hover_doc'.close()<CR>]])
+        map("n", "zl", [[<Cmd>lua require'lsp_preview_hover_doc'.open_or_focus()<CR>]])
+      end})
+    end)
+
+    require("lsp_preview_hover_doc").setup({
+      on_init_in_preview_window = function(bufnr)
+        map(bufnr, "L", "<Cmd>wincmd p<CR>")
+        map(bufnr, "H", "<Cmd>wincmd p<CR>")
+        map(bufnr, "<Left>", '<Cmd>lua require("lsp_preview_hover_doc").show_prev()<CR>')
+        map(bufnr, "<Right>", '<Cmd>lua require("lsp_preview_hover_doc").show_next()<CR>')
+      end,
+      win_opts = {
+        height = 20,
+        zindex = 30,
+      },
+    })
+
+
+==============================================================================
+vim:tw=78:sw=4:sts=4:ts=4:ft=help:norl:et
