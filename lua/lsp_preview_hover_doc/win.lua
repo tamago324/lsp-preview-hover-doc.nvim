@@ -104,16 +104,31 @@ local show_cursorline = function()
   end
 end
 
--- カレントタブにプレビューがあるか
-local exists_preview_in_current_tab = function()
+-- プレビューウィンドウを取得する
+local get_preview_win = function()
   for _, w in ipairs(a.nvim_list_wins()) do
     local res = vim.F.npcall(a.nvim_win_get_var, w, "preview_float_doc_window")
     if res ~= nil and res then
-      return true
+      return w
     end
   end
 
-  return false
+  return nil
+end
+
+-- カレントタブにプレビューがあるか
+local exists_preview_in_current_tab = function()
+  return get_preview_win() ~= nil
+end
+
+-- カレントウィンドウがプレビューよりも上か
+local is_above_than_preview = function()
+  local cur_zindex = a.nvim_win_get_config(0).zindex
+  local p_zindex = a.nvim_win_get_config(get_preview_win()).zindex
+  if cur_zindex == nil then
+    return true
+  end
+  return cur_zindex > p_zindex
 end
 
 -- プレビューにかぶっていたらスクロールする
@@ -125,6 +140,11 @@ local _scroll_duplicated_preview = function()
   end
 
   if not exists_preview_in_current_tab() then
+    return
+  end
+
+  -- もし、プレビューよりも上に表示されているなら、スクロールしない
+  if is_above_than_preview() then
     return
   end
 
