@@ -52,7 +52,7 @@ require("lsp_preview_hover_doc").setup({
 
 ## Screenshots
 
-![](https://github.com/tamago324/images/blob/master/lsp-preview-hover-doc.nvim/show.png)
+![](https://github.com/tamago324/images/blob/master/lsp-preview-hover-doc.nvim/preview.png)
 
 
 ## License
