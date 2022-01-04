@@ -35,7 +35,7 @@ end
 
 -- preview が表示されているか
 local get_win = function(preview_bufnr)
-  for _, w in ipairs(a.nvim_list_wins()) do
+  for _, w in ipairs(a.nvim_tabpage_list_wins(a.nvim_get_current_tabpage())) do
     if a.nvim_win_get_buf(w) == preview_bufnr then
       return w
     end
