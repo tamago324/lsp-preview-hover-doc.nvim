@@ -107,9 +107,9 @@ function M.open_or_focus()
 
   if get_win(ctx.preview_bufnr) == nil then
     ctx.preview_win = float_win.open_float_win(ctx.preview_bufnr)
+  else
+    M.focus()
   end
-
-  M.focus()
 end
 
 function M.request_hover_open_or_focus()
