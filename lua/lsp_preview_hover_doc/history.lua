@@ -11,7 +11,7 @@ function History.new()
   return setmetatable(obj, { __index = History })
 end
 
--- 履歴に追加する
+--- 履歴に追加する
 function History.add(self, markdown_lines)
   -- もし、存在していれば削除してから、先頭に追加する
   for i, v in ipairs(self.items) do
@@ -23,7 +23,7 @@ function History.add(self, markdown_lines)
   self.idx = #self.items
 end
 
--- 1つ後ろに戻す
+--- 1つ後ろに戻す
 function History.prev(self)
   if self.idx > 1 then
     self.idx = self.idx - 1
@@ -31,12 +31,17 @@ function History.prev(self)
   return self.items[self.idx]
 end
 
--- 1つ前に進める
+--- 1つ前に進める
 function History.next(self)
   if self.idx < #self.items then
     self.idx = self.idx + 1
   end
   return self.items[self.idx]
+end
+
+--- 現在の状況のテキストを取得する
+function History.get_current_status(self)
+  return string.format('[%s/%s]', self.idx, #self.items)
 end
 
 return History

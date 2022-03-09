@@ -153,6 +153,7 @@ function M.show_prev()
   end
 
   a.nvim_buf_set_lines(ctx.preview_bufnr, 0, -1, false, markdown_lines)
+  vim.api.nvim_echo({{ctx.history:get_current_status(), 'Normal'}}, false, {})
 end
 
 -- 次のドキュメントを表示する
@@ -165,6 +166,7 @@ function M.show_next()
   end
 
   a.nvim_buf_set_lines(ctx.preview_bufnr, 0, -1, false, markdown_lines)
+  vim.api.nvim_echo({{ctx.history:get_current_status(), 'Normal'}}, false, {})
 end
 
 ---@param prefs lsp_preview_hover_doc.config.values
