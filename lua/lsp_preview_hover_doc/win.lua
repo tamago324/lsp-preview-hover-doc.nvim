@@ -17,16 +17,6 @@ local calc_preview_opt_top = function()
   return vim.o.lines - _opts.height() - vim.o.cmdheight - statusline_height - border_weight
 end
 
---- Return a table with highlighted borderchars.
----   { {'=', highlight }, {'|', highlight}, ... }
----@param borderchars table
----@param highlight string
----@return table
-local make_border_opts = function(borderchars, highlight)
-  return vim.tbl_map(function(char)
-    return { char, highlight }
-  end, borderchars)
-end
 
 -- プレビューのオプションを作成する
 local make_default_win_opts = function()
@@ -42,16 +32,7 @@ local make_default_win_opts = function()
     width = width,
     height = height,
     zindex = 30,
-    border = make_border_opts({
-      "+",
-      "─",
-      "+",
-      "│",
-      "+",
-      "─",
-      "+",
-      "│",
-    }, "Normal"),
+    border = 'single'
   }
 end
 
@@ -186,7 +167,7 @@ local open_float_win = function(bufnr)
 
   show_cursorline()
 
-  a.nvim_win_set_option(win, "winhl", "Normal:LspPreviewHoverDocFloatNormal,EndOfBuffer:LspPreviewHoverDocFloatNormal")
+  a.nvim_win_set_option(win, "winhl", "Normal:LspPreviewHoverDocFloatNormal,EndOfBuffer:LspPreviewHoverDocFloatNormal,FloatBorder:LspPreviewHoverDocBorder")
 
   config.values.on_init_in_preview_window(bufnr)
 
